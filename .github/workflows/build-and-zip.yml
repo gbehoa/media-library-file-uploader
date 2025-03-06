@@ -1,0 +1,30 @@
+name: Build and Zip
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Install dependencies
+      run: |
+        composer install
+
+    - name: Create zip file
+      run: |
+        zip -r media-library-file-uploader.zip . -x '*.git*' -x '*.github*'
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: media-library-file-uploader
+        path: media-library-file-uploader.zip
